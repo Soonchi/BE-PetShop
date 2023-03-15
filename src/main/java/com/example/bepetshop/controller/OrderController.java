@@ -117,5 +117,40 @@ public class OrderController {
         return orderService.updateStatus(request);
     }
 
+    @GetMapping("/statusSuccess")
+    public List<OrderDto> getStatusSuccess() {
+        var orders = orderService.getListOrderByOrderSuccess();
+        var listOrder = orders.stream()
+                .map(order -> modelMapper.map(order, OrderDto.class))
+                .collect(Collectors.toList());
+        return listOrder;
+    }
+
+    @GetMapping("/statusDelivery")
+    public List<OrderDto> getStatusDelivery() {
+        var orders =  orderService.getListOrderByOrderDelivery();
+        var listOrder = orders.stream()
+                .map(order -> modelMapper.map(order, OrderDto.class))
+                .collect(Collectors.toList());
+        return listOrder;
+    }
+    @GetMapping("/statusWaiting")
+    public List<OrderDto> getStatusWaiting() {
+        var orders =  orderService.getListOrderByOrderWaitingForProgressing();
+        var listOrder = orders.stream()
+                .map(order -> modelMapper.map(order, OrderDto.class))
+                .collect(Collectors.toList());
+        return listOrder;
+    }
+
+    @GetMapping("/statusCancelled")
+    public List<OrderDto> getStatusCancelled() {
+        var orders =  orderService.getListOrderByOrderCancelled();
+        var listOrder = orders.stream()
+                .map(order -> modelMapper.map(order, OrderDto.class))
+                .collect(Collectors.toList());
+        return listOrder;
+    }
+
 
 }

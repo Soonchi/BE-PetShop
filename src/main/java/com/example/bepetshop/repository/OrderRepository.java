@@ -2,6 +2,7 @@ package com.example.bepetshop.repository;
 
 
 import com.example.bepetshop.models.Order;
+import com.example.bepetshop.models.response.OrderDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

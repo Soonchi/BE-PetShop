@@ -57,4 +57,8 @@ public class Product implements Serializable {
             property = "id")
     private List<OrderDetail> orderdetails = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product")
+    @JsonManagedReference
+    private List<Comment> comments = new ArrayList<>();
+
 }

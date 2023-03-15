@@ -47,4 +47,8 @@ public class User {
     @OneToOne
     private Cart cart;
 
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Comment> comments = new ArrayList<>();
+
 }

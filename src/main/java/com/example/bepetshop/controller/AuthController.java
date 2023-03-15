@@ -80,8 +80,6 @@ public class AuthController {
         );
 
         String token = jwtGenerator.generatorToken(authentication);
-
-
         return new LoginResponse(token);
     }
 

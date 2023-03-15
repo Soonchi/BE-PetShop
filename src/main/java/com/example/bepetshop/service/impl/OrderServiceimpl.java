@@ -6,6 +6,7 @@ import com.example.bepetshop.models.Order;
 import com.example.bepetshop.models.User;
 import com.example.bepetshop.models.request.AddOrderRequest;
 import com.example.bepetshop.models.request.ChangeStatusRequest;
+import com.example.bepetshop.models.response.OrderDto;
 import com.example.bepetshop.repository.*;
 import com.example.bepetshop.service.CustomUserDetailService;
 import com.example.bepetshop.service.OrderService;
@@ -46,7 +47,7 @@ public class OrderServiceimpl implements OrderService {
         order.setNameofreceiver(request.getNameofreceiver());
         order.setNumberofreceiver(request.getNumberofreceiver());
         order.setAddressofrecevicer(request.getAddressofrecevicer());
-        order.setStatus("Chờ xử lí");
+        order.setStatus("Chờ xử lý");
         order.setOrderDate(new Date());
         order.setUser(user);
         return orderRepository.save(order);
@@ -58,23 +59,39 @@ public class OrderServiceimpl implements OrderService {
     @Override
     public Order updateStatus(ChangeStatusRequest request) {
 
-        var order = orderRepository.findOrderById(request.getId());
-        order.setStatus(request.getStatus());
+        var order = orderRepository.findById(request.getId());
+        for (var o : order.get().getOrderdetails()) {
+            var product = o.getProduct();
+            product.setQuantity(o.getProduct().getQuantity() - o.getQuantity());
+            productRepository.save(product);
+        }
+        order.get().setStatus(request.getStatus());
 
-        return orderRepository.save(order);
+        return orderRepository.save(order.get());
     }
 
 
 
     @Override
-    public List<Order> getListOrderByOrderSuccess(String status) {
-        return orderRepository.findByStatus("Order Success");
+    public List<Order> getListOrderByOrderSuccess() {
+        return orderRepository.findByStatus("Đã giao thành công");
     }
 
     @Override
-    public List<Order> getListOrderByOrderComplete(String status) {
-        return orderRepository.findByStatus("Order Complete");
+    public List<Order> getListOrderByOrderDelivery() {
+        return orderRepository.findByStatus("Đơn hàng đang được giao");
     }
+
+    @Override
+    public List<Order> getListOrderByOrderWaitingForProgressing() {
+        return orderRepository.findByStatus("Chờ xử lý");
+    }
+
+    @Override
+    public List<Order> getListOrderByOrderCancelled() {
+        return orderRepository.findByStatus("Đã hủy");
+    }
+
 
     @Override
     public List<Order> findOrderByUserId() {
@@ -85,6 +102,7 @@ public class OrderServiceimpl implements OrderService {
         user.setCart(userDetailsService.getPrincipal().getCart());
         return orderRepository.findByUserId(user.getId());
     }
+
 
 
 
